@@ -1,21 +1,20 @@
 
-import { useState } from "react";
 
 
 import { backarrow } from "../assets/images";
 import Back from "./shared/back";
 import { goggleicon } from "../assets/images";
 import { hederalogo } from "../assets/images";
-import { emailicon } from "../assets/images";
+
 import { usericon } from "../assets/images";
 import { passwordicon } from "../assets/images";
 
 
 
 
-export default function AuthSignin() {
+export default function AuthLogin() {
 
-    const [agreedToTerms, setAgreedToTerms] = useState(false);
+
 
 
 
@@ -25,8 +24,8 @@ export default function AuthSignin() {
             <div>
                 <Back
                     image={backarrow}
-                    title="Get Started"
-                    text="Enter the six digit code sent to your mail for confirmationPlease kindly enter the username of your choice, a valid email address and password to access your account"
+                    title="Welcome Back"
+                    text="Glad to have you back, let’s pick the milestone from where we paused. Choose your login preference. the six digit code sent to your mail for confirmationPlease kindly enter the username of your choice, a valid email address and password to access your account"
 
                 />
 
@@ -49,18 +48,7 @@ export default function AuthSignin() {
                         </span>
                     </div>
 
-                    <div className="relative w-full">
-                        <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            placeholder="email"
-                            className="w-full p-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2">
-                            <img src={emailicon} alt="user icon" className="w-5 h-5" />
-                        </span>
-                    </div>
+
 
                     <div className="relative w-full">
                         <input
@@ -76,37 +64,7 @@ export default function AuthSignin() {
                     </div>
 
 
-                    <div className="relative w-full">
-                        <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            placeholder="confirm password"
-                            className="w-full p-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2">
-                            <img src={passwordicon} alt="user icon" className="w-5 h-5" />
-                        </span>
-                    </div>
                 </form>
-            </div>
-            <div className="flex items-start mb-6 gap-2">
-                <input
-                    type="checkbox"
-                    checked={agreedToTerms}
-                    onChange={(e) => setAgreedToTerms(e.target.checked)}
-                    className="w-4 h-4 mt-1 cursor-pointer"
-                />
-                <p className="text-sm text-gray-600">
-                    I agree with Hedera's{" "}
-                    <span className="text-blue-500 cursor-pointer hover:underline">
-                        Terms of Service
-                    </span>{" "}
-                    and{" "}
-                    <span className="text-blue-500 cursor-pointer hover:underline">
-                        Privacy Policy
-                    </span>
-                </p>
             </div>
 
 

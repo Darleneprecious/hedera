@@ -4,15 +4,16 @@
 import Screen2 from './onboarding/screen2'
 import './App.css'
 import { AuthScreen } from './onboarding/screen3'
-import screen1 from './onboarding/screen1'
+import Screen1 from './onboarding/screen1'
 import AuthEmail from './onboarding/screen4'
-import AuthLogin from './onboarding/screen5'
+import AuthLogin from './onboarding/screen6'
+import Screen7 from './onboarding/screen7'
 function App() {
 
 
   return (
     <>
-      < AuthLogin />
+      < Screen7 />
 
     </>
   )
