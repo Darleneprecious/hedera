@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { backarrow } from "../assets/images";
 import Back from "./shared/back";
 import { goggleicon } from "../assets/images";
@@ -8,6 +8,9 @@ import { emailicon } from "../assets/images";
 import { passwordicon } from "../assets/images";
 
 export default function Screen6() {
+
+    const navigate = useNavigate();
+
     // Form state
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -122,12 +125,10 @@ export default function Screen6() {
             setSuccess("Login successful! Redirecting...");
 
             // Redirect after short delay to show success message
-            setTimeout(() => {
-                // Navigate to dashboard or home screen
-                // window.location.href = "/dashboard";
-                console.log("Would navigate to dashboard here");
+            setSuccess("Login successful! Redirecting...");
 
-                // Clear form
+            setTimeout(() => {
+                navigate("/success");  // <-- Move to Screen7
                 setEmail("");
                 setPassword("");
             }, 1500);
