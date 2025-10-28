@@ -8,7 +8,7 @@ interface AuthScreenProps {
     onLogin?: () => void;
 }
 
-export function AuthScreen({ onCreateAccount, onLogin }: AuthScreenProps = {}) {
+export function AuthScreen({ onLogin }: AuthScreenProps = {}) {
     const navigate = useNavigate();
 
     const [contact, setContact] = useState('');
