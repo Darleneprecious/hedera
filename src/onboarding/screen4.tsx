@@ -4,7 +4,7 @@ import { useState } from "react";
 import { backarrow } from "../assets/images";
 import Back from "./shared/back";
 
-export default function AuthEmail() {
+export default function Screen4() {
     const [otpCode, setOtpCode] = useState<string[]>(["", "", "", "", "", ""]);
     const handleOtpChange = (index: number, value: string) => {
         const newOtpCode = [...otpCode];

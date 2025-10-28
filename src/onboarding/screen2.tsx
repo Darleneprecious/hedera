@@ -1,9 +1,15 @@
 
 import Onboarding from "./shared/hero";
 import { ellipse } from "../assets/images";
-
+import { useNavigate } from 'react-router-dom';
 
 export default function Screen2() {
+    const navigate = useNavigate();
+
+    const handleGetStarted = () => {
+        console.log("Button clicked, attempting to navigate");
+        navigate('/signup');
+    };
 
 
     return (
@@ -11,6 +17,7 @@ export default function Screen2() {
             <Onboarding
                 title="Discover New Moments Within Campus And Others"
                 image={ellipse}
+                onButtonClick={handleGetStarted}
 
 
             />

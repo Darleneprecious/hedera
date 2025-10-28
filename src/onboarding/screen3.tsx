@@ -2,12 +2,15 @@ import { backarrow } from "../assets/images";
 import Back from "./shared/back";
 
 
-interface AuthScreenProps {
-    onCreateAccount: () => void;
-    onLogin: () => void;
-}
+// interface AuthScreenProps {
+//     onCreateAccount: () => void;
+//     onLogin: () => void;
+// }
+// { onCreateAccount, onLogin }: AuthScreenProps)
+export function AuthScreen() {
 
-export function AuthScreen({ onCreateAccount, onLogin }: AuthScreenProps) {
+
+
     return (
         <div className='h-screen bg-gradient-to-br from-emerald-50 to-teal-50 w-full px-4 py-8 flex flex-col justify-between'>
             <div>
@@ -25,14 +28,14 @@ export function AuthScreen({ onCreateAccount, onLogin }: AuthScreenProps) {
 
                 <p className="text-center text-sm text-gray-600">
                     Already have an account?{" "}
-                    <span onClick={onLogin} className="text-blue-500 cursor-pointer">
+                    <span className="text-blue-500 cursor-pointer">
                         Login
                     </span>
                 </p>
 
                 <button
                     className="bg-[#00C317] text-xl w-full p-4 font-semibold text-white rounded-full"
-                    onClick={onCreateAccount}
+
                 >
                     Create Account
                 </button>

@@ -1,4 +1,6 @@
-import { ChangeEvent, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
+
+import { type ChangeEvent } from 'react';
 
 interface OtpFieldProps {
     otpCode: string[] | undefined;
@@ -48,7 +50,7 @@ export default function OtpField({
                             maxLength={1}
                             value={input}
                             onChange={(e) => handleChange(e, index)}
-                            ref={(el) => (inputRefs.current[index] = el)}
+                            // ref={(el) => void (inputsRef.current[index] = el)}
                             onKeyDown={(e) => handleBackspace(e, index)}
                         />
                     ))}

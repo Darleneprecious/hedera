@@ -12,7 +12,7 @@ import { passwordicon } from "../assets/images";
 
 
 
-export default function AuthLogin() {
+export default function Screen6() {
 
 
 

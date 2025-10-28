@@ -12,7 +12,9 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.15",
     "@tanstack/react-query": "^5.90.5",
+    "axios": "^1.13.0",
     "formik": "^2.4.6",
+    "hashconnect": "^3.0.14",
     "lucide-react": "^0.546.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
