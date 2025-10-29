@@ -1,15 +1,22 @@
-
-
-
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import './App.css';
-import Screen1 from './onboarding/screen1';
-import Screen2 from './onboarding/screen2';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "./App.css";
+import Screen1 from "./onboarding/screen1";
+import Screen2 from "./onboarding/screen2";
 // import { AuthScreen } from './page/screen3';
-import Screen5 from './onboarding/screen5';
+import Screen5 from "./onboarding/screen5";
 // import Screen4 from './onboarding/screen4';
-import Screen6 from './onboarding/screen6'
-import Screen7 from './onboarding/screen7';
+import Screen6 from "./onboarding/screen6";
+import Screen7 from "./onboarding/screen7";
+
+import AppLayout from "./layouts/AppLayout";
+import Dashboard from "./pages/Dashboard";
+
+import TransactionsPage from "./components/transactions/TransactionsPage";
+import BookRidePage from "./pages/app/bookride/BookRidePage";
+import AvailableRides from "./pages/app/bookride/AvailableRides";
+import RideDetailsPage from "./pages/app/bookride/RideDetailsPage";
+import MakePaymentPage from "./pages/app/bookride/MakePaymentPage";
+import PaymentSuccess from "./pages/app/bookride/PaymentSuccess";
 
 function App() {
   return (
@@ -24,11 +31,21 @@ function App() {
         <Route path="/login" element={<Screen6 />} />
         <Route path="/success" element={<Screen7 />} />
 
+        <Route path="/book-ride" element={<BookRidePage />} />
+        <Route path="/available-rides" element={<AvailableRides />} />
+        <Route path="/ride-details" element={<RideDetailsPage />} />
+        <Route path="/ride-payment" element={<MakePaymentPage />} />
+        <Route path="/ride-payment-success" element={<PaymentSuccess />} />
+        <Route path="/transactions" element={<TransactionsPage />} />
+
+        {/* APP ROUTES */}
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
-
-
   );
 }
 
