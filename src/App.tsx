@@ -11,12 +11,15 @@ import Screen7 from "./onboarding/screen7";
 import AppLayout from "./layouts/AppLayout";
 import Dashboard from "./pages/Dashboard";
 
+import TestAPI from "./pages/TestApi";
+
 import TransactionsPage from "./components/transactions/TransactionsPage";
 import BookRidePage from "./pages/app/bookride/BookRidePage";
 import AvailableRides from "./pages/app/bookride/AvailableRides";
 import RideDetailsPage from "./pages/app/bookride/RideDetailsPage";
 import MakePaymentPage from "./pages/app/bookride/MakePaymentPage";
 import PaymentSuccess from "./pages/app/bookride/PaymentSuccess";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -31,6 +34,8 @@ function App() {
         <Route path="/login" element={<Screen6 />} />
         <Route path="/success" element={<Screen7 />} />
 
+        <Route path="/test" element={<TestAPI />} />
+
         <Route path="/book-ride" element={<BookRidePage />} />
         <Route path="/available-rides" element={<AvailableRides />} />
         <Route path="/ride-details" element={<RideDetailsPage />} />
@@ -41,6 +46,7 @@ function App() {
         {/* APP ROUTES */}
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

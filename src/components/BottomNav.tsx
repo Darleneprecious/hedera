@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
 export default function BottomNav() {
   return (
     // Fixed container for bottom navigation
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white px-2 py-2 shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
+    <nav className="max-w-md mx-auto fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white px-2 py-2 shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
       {navItems.map((item) => {
         const Icon = item.icon;
         return (
