@@ -6,30 +6,45 @@ import {
   ReactNode,
 } from "react";
 
-// Define the User type — you can expand as your backend grows
+interface UserPreferences {
+  darkMode?: boolean;
+  notifications?: boolean;
+  biometrics?: boolean;
+  twoFA?: boolean;
+  language?: string;
+}
+
 interface User {
   id?: string;
   name?: string;
   email?: string;
   profilePic?: string;
-  [key: string]: any; // flexible for other backend fields
+  preferences?: UserPreferences;
+  paymentMethods?: PaymentMethod[];
+  [key: string]: any;
 }
 
-// Context shape — now includes updateUser
+interface PaymentMethod {
+  id: string;
+  cardType: string; // e.g. "Visa", "MasterCard"
+  last4: string;
+  expiry: string;
+}
+
 interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   updateUser: (updatedFields: Partial<User>) => void;
+  updateUserPreferences: (updatedPrefs: Partial<UserPreferences>) => void;
   logout: () => void;
 }
 
-// Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // 🔹 Load user from localStorage on app start
+  // Load user from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -42,23 +57,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // 🔹 Sync localStorage whenever user changes
+  // Keep localStorage in sync
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
+    if (user) localStorage.setItem("user", JSON.stringify(user));
+    else localStorage.removeItem("user");
   }, [user]);
 
-  // updateUser — merges new fields into the current user
+  // Apply dark mode
+  useEffect(() => {
+    const darkMode = user?.preferences?.darkMode;
+    document.documentElement.classList.toggle("dark", !!darkMode);
+  }, [user?.preferences?.darkMode]);
+
+  // Update user fields
   const updateUser = (updatedFields: Partial<User>) => {
     setUser((prev) =>
       prev ? { ...prev, ...updatedFields } : { ...updatedFields }
     );
   };
 
-  //  logout — clears user and token
+  // ✅ Update only preferences
+  const updateUserPreferences = (updatedPrefs: Partial<UserPreferences>) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const updatedUser = {
+        ...prev,
+        preferences: {
+          ...prev.preferences,
+          ...updatedPrefs,
+        },
+      };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      return updatedUser;
+    });
+  };
+
+  // Logout clears all
   const logout = () => {
     setUser(null);
     localStorage.removeItem("authToken");
@@ -66,13 +100,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, updateUser, logout }}>
+    <AuthContext.Provider
+      value={{ user, setUser, updateUser, updateUserPreferences, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// ✅ Custom hook
 export const useAuthContext = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

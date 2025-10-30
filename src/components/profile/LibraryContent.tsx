@@ -142,7 +142,9 @@ const LibraryContent = () => {
         <div className="">
           <BookIcon className="w-8 h-8" />
         </div>
-        <h2 className="text-2xl font-bold">Current Reads</h2>
+        <h2 className="text-2xl text-black dark:text-white font-bold">
+          Current Reads
+        </h2>
       </div>
 
       {/* Current Reads list */}

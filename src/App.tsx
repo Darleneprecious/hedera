@@ -1,11 +1,10 @@
-
 import { Provider } from "react-redux";
 import { store } from "./store";
 
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import './App.css';
-import Screen1 from './onboarding/screen1';
-import Screen2 from './onboarding/screen2';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "./App.css";
+import Screen1 from "./onboarding/screen1";
+import Screen2 from "./onboarding/screen2";
 
 import "./App.css";
 
@@ -27,6 +26,8 @@ import RideDetailsPage from "./pages/app/bookride/RideDetailsPage";
 import MakePaymentPage from "./pages/app/bookride/MakePaymentPage";
 import PaymentSuccess from "./pages/app/bookride/PaymentSuccess";
 import ProfilePage from "./pages/ProfilePage";
+import SupportPage from "./pages/SupportPage";
+import EditProfilePage from "./components/profile/EditProfilePage";
 
 function App() {
   return (
@@ -67,11 +68,13 @@ function App() {
           <Route path="/ride-payment" element={<MakePaymentPage />} />
           <Route path="/ride-payment-success" element={<PaymentSuccess />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/edit-profile" element={<EditProfilePage />} />
 
           {/* APP ROUTES */}
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/support" element={<SupportPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

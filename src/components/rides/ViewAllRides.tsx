@@ -1,136 +1,210 @@
 import { useState } from "react";
-import ActiveRideCard from "./ActiveRideCard";
-import PastRideItem from "./PastRideItem";
-import RewardsSummary from "./RewardsSummary";
-import type { Ride } from "./types";
+import { ChevronDown, XCircle, Clock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import Pickup from "../../assets/home-icons/pickup.svg?react";
+import DropOff from "../../assets/home-icons/dropoff.svg?react";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
 import Image from "../../assets/home-icons/rider1.svg";
 
-/**
- * RidesContent
- * - Top tab action buttons (Book A Bus / View All Rides)
- * - Active Ride card (if active ride exists)
- * - Past Rides list
- * - Rewards summary box
- *
- * Replace mock data with API fetch when ready.
- */
-
-const MOCK_RIDES: Ride[] = [
+// --- Sample Ride Data ---
+const rides = [
   {
-    id: "r-active",
-    status: "active",
-    pickupLabel: "Location A",
-    dropoffLabel: "Location B",
-    distanceKm: 5,
-    etaMinutes: 3,
-    driver: {
-      name: "Second Driver",
-      avatar: Image,
-      car: "Toyota Camry",
-      plate: "IKJ-345-AG",
-      verified: true,
-    },
-  },
-  {
-    id: "r1",
-    status: "completed",
-    pickupLabel: "Location A",
-    dropoffLabel: "Location B",
-    color: `text-pri`,
-    driver: {
-      name: "First Driver",
-      avatar: Image,
-      car: "Honda Accord",
-      plate: "ABJ-123-GW",
-      verified: true,
-    },
+    id: 1,
+    driverName: "First Driver",
+    car: "Honda Accord",
+    plate: "ABJ-123-GW",
+    date: "19th June, 2025",
     fare: 300,
     tokens: 120,
-    date: "2025-06-19",
+    color: `text-pri`,
+    avatar: Image,
+    status: "Ongoing",
   },
   {
-    id: "r2",
-    status: "completed",
-    pickupLabel: "Location A",
-    dropoffLabel: "Location B",
-    color: `text-blue-600 bg-pri`,
-    driver: {
-      name: "Second Driver",
-      avatar: Image,
-      car: "Toyota Camry",
-      plate: "IKJ-345-AG",
-      verified: true,
-    },
-    fare: 600,
-    tokens: 120,
-    date: "2025-07-24",
-  },
-  {
-    id: "r3",
-    status: "completed",
-    pickupLabel: "Location A",
-    dropoffLabel: "Location B",
-    color: `text-blue-600`,
-    driver: {
-      name: "Better Driver",
-      avatar: Image,
-      car: "Honda Accord",
-      plate: "ABJ-123-GW",
-      verified: true,
-    },
+    id: 2,
+    driverName: "Second Driver",
+    car: "Toyota Camry",
+    plate: "IKJ-345-AG",
+    date: "20th June, 2025",
     fare: 500,
-    tokens: 120,
-    date: "2025-10-11",
+    tokens: 200,
+    color: `text-blue-600`,
+    avatar: Image,
+    status: "Completed",
+  },
+  {
+    id: 3,
+    driverName: "Third Driver",
+    car: "Kia Optima",
+    plate: "ABC-999-LAG",
+    date: "21st June, 2025",
+    fare: 250,
+    tokens: 100,
+    color: `text-red-600`,
+    avatar: Image,
+    status: "Cancelled",
   },
 ];
 
+// --- Filter Options ---
+const statusFilters = ["All Rides", "Ongoing", "Completed", "Cancelled"];
+
 const ViewAllRides = () => {
-  // will be replaced with API state
-  const [rides] = useState<Ride[]>(MOCK_RIDES);
+  const [filter, setFilter] = useState("All Rides");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // find the active ride (if any)
-  const activeRide = rides.find((r) => r.status === "active");
-  const pastRides = rides.filter((r) => r.status === "completed");
+  // --- Filter logic ---
+  const filteredRides =
+    filter === "All Rides" ? rides : rides.filter((r) => r.status === filter);
 
-  const handleMarkCompleted = (rideId: string) => {
-    // In a real app: call backend to mark complete, refetch rides
-    alert(`Ride ${rideId} marked completed (stub).`);
+  // --- Helper to get color styles for status badges ---
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case "Ongoing":
+        return "bg-[#d7a500] text-white";
+      case "Completed":
+        return "bg-green-100 text-green-700";
+      case "Cancelled":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-100 text-gray-600";
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "Ongoing":
+        return <Clock className="w-3.5 h-3.5" />;
+      case "Completed":
+        return <RiVerifiedBadgeFill className="w-3.5 h-3.5" />;
+      case "Cancelled":
+        return <XCircle className="w-3.5 h-3.5" />;
+      default:
+        return null;
+    }
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-6 space-y-6">
-      {/* Tab action buttons */}
+    <div className="max-w-md mx-auto space-y-4 relative">
+      {/* --- Dropdown Filter Header --- */}
+      <div className="relative">
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="flex items-center gap-1 font-semibold text-lg"
+        >
+          {filter}
+          <ChevronDown
+            className={`w-5 h-5 transition-transform duration-300 ${
+              dropdownOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
 
-      {/* Active Ride section */}
-      {activeRide ? (
-        <ActiveRideCard
-          ride={activeRide}
-          onComplete={() => handleMarkCompleted(activeRide.id)}
-        />
-      ) : (
-        <div className="p-4 bg-white rounded-xl shadow-sm text-gray-500">
-          No active rides
-        </div>
-      )}
-
-      {/* Past Rides */}
-      <div>
-        <h3 className="text-xl font-bold">Past Rides</h3>
-        <p className="text-sm text-gray-500 mt-1 mb-4">
-          View details of your completed trips and keep track of your ride
-          history.
-        </p>
-
-        <div className="space-y-4">
-          {pastRides.map((r) => (
-            <PastRideItem key={r.id} ride={r} />
-          ))}
-        </div>
+        {/* --- Dropdown Menu --- */}
+        <AnimatePresence>
+          {dropdownOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-8 left-0 bg-white rounded-xl shadow-md w-44 z-10"
+            >
+              {statusFilters.map((status) => (
+                <button
+                  key={status}
+                  onClick={() => {
+                    setFilter(status);
+                    setDropdownOpen(false);
+                  }}
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition ${
+                    filter === status
+                      ? "text-pri font-semibold"
+                      : "text-gray-700"
+                  }`}
+                >
+                  {status}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Rewards summary */}
-      <RewardsSummary totalEarned={3200} redeemed={1680} available={1520} />
+      {/* --- Ride List --- */}
+      <div className="space-y-4">
+        {filteredRides.map((ride) => (
+          <div>
+            <div className="bg-white rounded-xl p-3 shadow-sm">
+              <div
+                className={`flex items-center mb-3 gap-1 text-xs px-2 py-1 rounded-full font-medium w-fit ${getStatusStyle(
+                  ride.status
+                )}`}
+              >
+                {getStatusIcon(ride.status)}
+                {ride.status}
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <img
+                    src={ride.avatar ?? "/images/avatar-placeholder.png"}
+                    alt={ride.driverName}
+                    className="w-14 h-14 rounded-full object-cover border"
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <div className="font-semibold">{ride.driverName}</div>
+                        <RiVerifiedBadgeFill
+                          size={16}
+                          className={`${ride.color}`}
+                        />
+                        <div className="text-xs text-gray-500">{ride.date}</div>
+                      </div>
+                      <div className="text-sm text-gray-500 flex items-center gap-3">
+                        {ride.car}
+                        <div className="text-xs bg-grey text-black px-2 py-0.5 rounded font-semibold">
+                          {ride.plate}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right ">
+                      <div className="font-semibold mb-2 text-green-600">
+                        #{ride.fare}
+                      </div>
+                      <div className="text-xs bg-[#d7a500] text-white px-2 py-0.5 rounded-full font-medium">
+                        + {ride.tokens} token
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* small plate slug and horizontal colored progress line */}
+              <div className="flex items-center mt-3">
+                <div className="flex items-center gap-2 justify-center">
+                  <Pickup className="w-4 h-4" />
+                  <span className="text-xs font-semibold">Location A</span>
+                </div>
+                <div className="flex-1 text-center text-gray-800 text-sm">
+                  <div className="w-full px-2 my-0.5">
+                    <div className="w-full h-px bg-linear-to-r rounded-md from-[#ff3333]/64 via-[#a68d01]/64 to-pri "></div>
+                  </div>
+                </div>
+                <div className="flex gap-3 items-center justify-center">
+                  <DropOff className=" w-4 h-4" />
+                  <span className="text-xs font-semibold">Location B</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
+
 export default ViewAllRides;

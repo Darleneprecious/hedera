@@ -3,8 +3,22 @@
 @theme {
   --color-pri: #00c317;
   --color-grey: #c3c3c3;
+  --color-bg: #f9fafb;
+  --color-text: #0f172a;
+  --color-bg-dark: #0f172a;
+  --color-text-dark: #f9fafb;
 }
 
-body {
-  @apply bg-white;
+@layer base {
+  :root {
+    color-scheme: light;
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .dark {
+    color-scheme: dark;
+    background: var(--color-bg-dark);
+    color: var(--color-text-color);
+  }
 }
