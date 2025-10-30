@@ -8,7 +8,6 @@ import Calendar from "../../assets/profile-icons/calender.svg?react";
 import Fire from "../../assets/profile-icons/fire.svg?react";
 import Wallet from "../../assets/profile-icons/wallet.svg?react";
 import User from "../../assets/profile-icons/userplus.svg?react";
-import EditProfileForm from "./EditProfileForm";
 
 // ------------------------------
 // Profile Header Component
@@ -16,7 +15,7 @@ import EditProfileForm from "./EditProfileForm";
 const ProfileHeader = () => {
   const navigate = useNavigate();
   const { user } = useAuthContext();
-  const [showEditModal, setShowEditModal] = useState(false);
+
   const [showWallet, setShowWallet] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
 
@@ -28,7 +27,7 @@ const ProfileHeader = () => {
     <>
       {/* ---------- Profile Header ---------- */}
       <motion.div
-        className="bg-linear-to-b max-w-md mx-auto from-green-50 to-white p-3 pb-0"
+        className=" max-w-md mx-auto rounded-b-xl bg-green-50 p-3 "
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -51,7 +50,7 @@ const ProfileHeader = () => {
                 className="w-17 h-17 rounded-full object-cover border-4 border-white shadow"
               />
             ) : (
-              <div className="w-17 h-17 rounded-full bg-green-600 flex items-center justify-center text-white text-3xl font-bold border-2 border-white shadow">
+              <div className="w-17 h-17 rounded-full bg-pri flex items-center justify-center text-white text-3xl font-bold border-2 border-white shadow">
                 {initial}
               </div>
             )}
@@ -89,8 +88,8 @@ const ProfileHeader = () => {
         {/* Buttons */}
         <div className="mt-4 flex flex-col gap-3">
           <button
-            onClick={() => setShowEditModal(true)}
-            className="bg-pri text-white py-2 px-5 rounded-xl flex gap-4 items-center justify-center font-semibold shadow hover:bg-green-600 transition"
+            onClick={() => navigate("/edit-profile")}
+            className="bg-pri text-white py-2 px-5 rounded-xl flex gap-4 items-center justify-center cursor-pointer font-semibold shadow hover:bg-green-600 transition"
           >
             <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center">
               <Pen />
@@ -120,15 +119,6 @@ const ProfileHeader = () => {
 
       {/* ---------- Edit Profile Modal ---------- */}
       <AnimatePresence>
-        {showEditModal && (
-          <Modal onClose={() => setShowEditModal(false)} title="Edit Profile">
-            <EditProfileForm
-              user={user}
-              onClose={() => setShowEditModal(false)}
-            />
-          </Modal>
-        )}
-
         {/* ---------- Wallet Modal ---------- */}
         {showWallet && (
           <Modal onClose={() => setShowWallet(false)} title="Wallet Overview">

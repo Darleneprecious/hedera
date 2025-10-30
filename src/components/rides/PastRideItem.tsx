@@ -3,13 +3,6 @@ import Pickup from "../../assets/home-icons/pickup.svg?react";
 import DropOff from "../../assets/home-icons/dropoff.svg?react";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 
-/**
- * PastRideItem
- * - left avatar + name + car info
- * - a slim distance/time colored line (visual)
- * - right: fare and tokens badge
- */
-
 const PastRideItem = ({ ride }: { ride: Ride }) => {
   return (
     <div className="bg-white rounded-xl p-3 shadow-sm">
@@ -40,14 +33,14 @@ const PastRideItem = ({ ride }: { ride: Ride }) => {
               <div className="font-semibold mb-2 text-green-600">
                 #{ride.fare}
               </div>
-              <div className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-medium">
+              <div className="text-xs bg-[#d7a500] text-white px-2 py-0.5 rounded-full font-medium">
                 + {ride.tokens} token
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/* small plate slug and horizontal colored progress-like line */}
+      {/* small plate slug and horizontal colored progress line */}
       <div className="flex items-center mt-3">
         <div className="flex items-center gap-2 justify-center">
           <Pickup className="w-4 h-4" />
@@ -59,8 +52,8 @@ const PastRideItem = ({ ride }: { ride: Ride }) => {
           </div>
         </div>
         <div className="flex gap-3 items-center justify-center">
-          <span className="text-xs font-semibold">{ride.dropoffLabel}</span>
           <DropOff className=" w-4 h-4" />
+          <span className="text-xs font-semibold">{ride.dropoffLabel}</span>
         </div>
       </div>
     </div>

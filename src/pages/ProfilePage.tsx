@@ -4,6 +4,7 @@ import ProfileTabs from "../components/profile/ProfileTabs";
 import LibraryContent from "../components/profile/LibraryContent";
 import { motion, AnimatePresence } from "framer-motion";
 import RidesContent from "../components/rides/RidesContent";
+import SettingsPage from "../components/settings/SettingsPage";
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("library");
@@ -39,17 +40,17 @@ const ProfilePage = () => {
               <RidesContent />
             </motion.div>
           )}
-          {/* {activeTab === "settings" && (
-    <motion.div
-      key="settings"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.3 }}
-    >
-      <SettingsContent />
-    </motion.div>
-  )} */}
+          {activeTab === "settings" && (
+            <motion.div
+              key="settings"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SettingsPage />
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
     </div>

@@ -20,6 +20,8 @@ import RideDetailsPage from "./pages/app/bookride/RideDetailsPage";
 import MakePaymentPage from "./pages/app/bookride/MakePaymentPage";
 import PaymentSuccess from "./pages/app/bookride/PaymentSuccess";
 import ProfilePage from "./pages/ProfilePage";
+import SupportPage from "./pages/SupportPage";
+import EditProfilePage from "./components/profile/EditProfilePage";
 
 function App() {
   return (
@@ -41,12 +43,14 @@ function App() {
         <Route path="/ride-details" element={<RideDetailsPage />} />
         <Route path="/ride-payment" element={<MakePaymentPage />} />
         <Route path="/ride-payment-success" element={<PaymentSuccess />} />
+        <Route path="/edit-profile" element={<EditProfilePage />} />
         <Route path="/transactions" element={<TransactionsPage />} />
 
         {/* APP ROUTES */}
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/support" element={<SupportPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -16,8 +16,8 @@ const PaymentSuccess = () => {
   useEffect(() => {
     // Auto redirect after 4 seconds
     const timer = setTimeout(() => {
-      navigate("/home", { replace: true });
-    }, 4000);
+      navigate("/dashboard", { replace: true });
+    }, 5000);
     return () => clearTimeout(timer);
   }, [navigate]);
 
@@ -85,7 +85,7 @@ const PaymentSuccess = () => {
       {/* Manual Back Button (in case auto nav is slow) */}
       <motion.button
         whileTap={{ scale: 0.95 }}
-        onClick={() => navigate("/home")}
+        onClick={() => navigate("/dashboard")}
         className="mt-8 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold text-sm shadow"
       >
         Back to Home
