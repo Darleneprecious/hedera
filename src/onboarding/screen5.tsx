@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useHashConnect from '../page/useHashConnect';
 
 import { backarrow } from "../assets/images";
 import Back from "./shared/back";
@@ -11,6 +12,7 @@ import { passwordicon } from "../assets/images";
 
 export default function Screen5() {
     const navigate = useNavigate();
+    const { isConnected, accountId, isLoading: isWalletLoading, connect } = useHashConnect();
 
     // Form state
     const [username, setUsername] = useState("");
@@ -30,12 +32,10 @@ export default function Screen5() {
     };
 
     const validatePassword = (password: string): boolean => {
-        // At least 8 characters, 1 uppercase, 1 lowercase, 1 number
         return password.length >= 8;
     };
 
     const validateForm = (): string | null => {
-        // Check if all fields are filled
         if (!username.trim()) {
             return "Please enter a username";
         }
@@ -68,16 +68,14 @@ export default function Screen5() {
             return "You must agree to the Terms of Service and Privacy Policy";
         }
 
-        return null; // No errors
+        return null;
     };
 
     const handleRegister = async () => {
         console.log("=== Starting Registration ===");
 
-        // Clear previous errors
         setError("");
 
-        // Validate the form
         const validationError = validateForm();
         if (validationError) {
             console.log("Validation failed:", validationError);
@@ -86,15 +84,9 @@ export default function Screen5() {
         }
 
         console.log("Form validation passed");
-        console.log("Username:", username);
-        console.log("Email:", email);
-
         setIsLoading(true);
 
         try {
-            // STEP 1: Call the /register/ endpoint
-            console.log("Calling /register/ endpoint...");
-
             const response = await fetch("https://team-7-api.onrender.com/register/", {
                 method: "POST",
                 headers: {
@@ -104,13 +96,12 @@ export default function Screen5() {
                     username: username.trim(),
                     email: email.trim().toLowerCase(),
                     password: password,
-                    role: "student", // You can make this dynamic if needed
+                    role: "student",
                 }),
             });
 
             console.log("Response status:", response.status);
 
-            // STEP 2: Check if registration was successful
             if (!response.ok) {
                 console.error("Registration failed with status:", response.status);
 
@@ -120,10 +111,8 @@ export default function Screen5() {
                     const errorData = await response.json();
                     console.error("Error response:", errorData);
 
-                    // Extract error message from response
                     errorMessage = errorData.message || errorData.error || errorData.detail || errorMessage;
 
-                    // Handle specific error cases
                     if (errorData.username) {
                         errorMessage = "Username already taken. Please choose another.";
                     } else if (errorData.email) {
@@ -133,7 +122,6 @@ export default function Screen5() {
                     console.error("Could not parse error response");
                 }
 
-                // Provide specific messages based on status codes
                 if (response.status === 400) {
                     throw new Error(errorMessage || "Invalid registration data. Please check your information.");
                 } else if (response.status === 409) {
@@ -147,12 +135,9 @@ export default function Screen5() {
                 }
             }
 
-            // STEP 3: Parse the successful response
             const data = await response.json();
             console.log("Registration successful! Response:", data);
 
-            // STEP 4: Store user information
-            // The API returns the created user data
             if (data.username) {
                 localStorage.setItem("username", data.username);
                 console.log("Stored username:", data.username);
@@ -168,14 +153,10 @@ export default function Screen5() {
                 console.log("Stored role:", data.role);
             }
 
-            // Store the entire user object
             localStorage.setItem("user", JSON.stringify(data));
 
-            // STEP 5: Navigate to the next screen
-            // You might want to go to a success screen, OTP setup, or login
             console.log("Navigating to welcome screen...");
 
-            // Option 1: Go directly to welcome/dashboard
             navigate("/welcome", {
                 state: {
                     message: "Registration successful! Welcome to Hedera.",
@@ -183,26 +164,9 @@ export default function Screen5() {
                 }
             });
 
-            // Option 2: Go to OTP setup if you want to add 2FA
-            // navigate("/auth", {
-            //     state: {
-            //         email: email,
-            //         justRegistered: true,
-            //     }
-            // });
-
-            // Option 3: Go to login screen
-            // navigate("/login", {
-            //     state: {
-            //         message: "Registration successful! Please login.",
-            //         email: email,
-            //     }
-            // });
-
         } catch (err) {
             console.error("Registration error:", err);
 
-            // Handle network errors
             if (err instanceof TypeError && err.message.includes("fetch")) {
                 setError("Network error. Please check your internet connection.");
             } else {
@@ -216,19 +180,99 @@ export default function Screen5() {
 
     const handleGoogleSignIn = () => {
         console.log("Google sign-in clicked");
-        // Implement Google OAuth integration here
         setError("Google sign-in is not yet implemented");
     };
 
-    const handleHederaSignIn = () => {
-        console.log("Hedera sign-in clicked");
-        // Implement Hedera wallet integration here
-        setError("Hedera sign-in is not yet implemented");
+    // NEW: Hedera Wallet Connection Handler
+    const handleHederaSignIn = async () => {
+        console.log("=== Starting Hedera Wallet Sign-In ===");
+        setError("");
+
+        try {
+            // Step 1: Connect wallet
+            if (!isConnected) {
+                console.log("Connecting to Hedera wallet...");
+                await connect();
+                // Wait for connection to complete and accountId to be available
+                // The connection state will update and we'll handle it in the effect
+                return;
+            }
+
+            // Step 2: If already connected, proceed with API call
+            if (isConnected && accountId) {
+                await saveHederaAccountToAPI(accountId);
+            }
+
+        } catch (err) {
+            console.error("Hedera sign-in error:", err);
+            setError(err instanceof Error ? err.message : "Failed to connect Hedera wallet");
+        }
     };
+
+    // NEW: Function to save Hedera account to your API
+    const saveHederaAccountToAPI = async (hederaAccountId: string) => {
+        console.log("Saving Hedera account to API...");
+        setIsLoading(true);
+
+        try {
+            const response = await fetch("https://team-7-api.onrender.com/connect-hedera/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    hedera_account_id: hederaAccountId,
+                    public_key: "string", // Replace with actual public key if available
+                }),
+            });
+
+            console.log("Hedera API response status:", response.status);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Hedera API error:", errorData);
+                throw new Error(errorData.message || "Failed to save Hedera account");
+            }
+
+            const data = await response.json();
+            console.log("Hedera account saved successfully:", data);
+
+            // Store Hedera account info
+            localStorage.setItem("hederaAccountId", hederaAccountId);
+            localStorage.setItem("hederaConnected", "true");
+
+            // Navigate to screen7
+            navigate("/success", {
+                state: {
+                    message: "Hedera wallet connected successfully!",
+                    hederaAccountId: hederaAccountId,
+                }
+            });
+
+        } catch (err) {
+            console.error("Failed to save Hedera account:", err);
+            setError(err instanceof Error ? err.message : "Failed to save Hedera account");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // NEW: Effect to handle connection completion
+    useEffect(() => {
+        if (isConnected && accountId && !isLoading) {
+            console.log("Wallet connected with account:", accountId);
+            // Automatically save to API once connected
+            saveHederaAccountToAPI(accountId);
+        }
+    }, [isConnected, accountId]);
 
     const handleLoginClick = () => {
         console.log("Navigating to login screen");
         navigate("/login");
+    };
+
+    const formatAccountId = (id: string) => {
+        return `${id.slice(0, 6)}...${id.slice(-4)}`;
     };
 
     return (
@@ -258,7 +302,7 @@ export default function Screen5() {
                             value={username}
                             onChange={(e) => {
                                 setUsername(e.target.value);
-                                setError(""); // Clear error when user types
+                                setError("");
                             }}
                             placeholder="Username"
                             className="w-full p-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -335,6 +379,15 @@ export default function Screen5() {
                             <p className="text-red-600 text-sm">{error}</p>
                         </div>
                     )}
+
+                    {/* Success Message for Connected Wallet */}
+                    {isConnected && accountId && (
+                        <div className="w-full p-3 bg-green-50 border border-green-300 rounded-lg">
+                            <p className="text-green-600 text-sm font-medium">
+                                ✓ Wallet Connected: {formatAccountId(accountId)}
+                            </p>
+                        </div>
+                    )}
                 </form>
             </div>
 
@@ -367,28 +420,28 @@ export default function Screen5() {
                 {/* Confirm/Register Button */}
                 <button
                     onClick={handleRegister}
-                    disabled={isLoading}
+                    disabled={isLoading || isWalletLoading}
                     className="bg-[#00C317] mb-2 text-xl w-full p-4 font-semibold text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-600 transition-colors"
                 >
                     {isLoading ? "Creating Account..." : "Confirm"}
                 </button>
 
-                {/* Hedera Button */}
+                {/* Hedera Button - NOW FUNCTIONAL */}
                 <button
                     onClick={handleHederaSignIn}
-                    disabled={isLoading}
+                    disabled={isLoading || isWalletLoading}
                     className="bg-white mb-2 flex items-center justify-center gap-4 text-xl w-full p-4 font-semibold text-black rounded-full border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
                     <span className="w-6 h-6">
                         <img src={hederalogo} alt="Hedera logo" />
                     </span>
-                    Continue with Hedera
+                    {isWalletLoading ? "Connecting..." : isConnected ? `Connected: ${formatAccountId(accountId || '')}` : "Continue with Hedera"}
                 </button>
 
                 {/* Google Button */}
                 <button
                     onClick={handleGoogleSignIn}
-                    disabled={isLoading}
+                    disabled={isLoading || isWalletLoading}
                     className="bg-white mb-2 flex items-center justify-center gap-4 text-xl w-full p-4 font-semibold text-black rounded-full border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
                     <span>

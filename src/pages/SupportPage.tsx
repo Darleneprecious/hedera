@@ -82,7 +82,7 @@ export default function SupportPage() {
       transition={{ duration: 0.3 }}
       className="max-w-md mx-auto px-4 py-6 space-y-6"
     >
-      {/* 🧭 Header */}
+      {/* Header */}
       <div>
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
           Support Center
