@@ -1,5 +1,6 @@
 
-
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
@@ -13,22 +14,23 @@ import Screen7 from './onboarding/screen7';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Onboarding flow */}
-        <Route path="/" element={<Screen1 />} />
-        <Route path="/welcome" element={<Screen2 />} />
-        {/* <Route path="/auth" element={<AuthScreen />} /> */}
-        {/* <Route path="/verify-code" element={<Screen4 />} /> */}
-        <Route path="/signup" element={<Screen5 />} />
-        <Route path="/login" element={<Screen6 />} />
-        <Route path="/success" element={<Screen7 />} />
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          {/* Onboarding flow */}
+          <Route path="/" element={<Screen1 />} />
+          <Route path="/welcome" element={<Screen2 />} />
+          {/* <Route path="/auth" element={<AuthScreen />} /> */}
+          {/* <Route path="/verify-code" element={<Screen4 />} /> */}
+          <Route path="/signup" element={<Screen5 />} />
+          <Route path="/login" element={<Screen6 />} />
+          <Route path="/success" element={<Screen7 />} />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
 
-
+    </Provider>
   );
 }
 
