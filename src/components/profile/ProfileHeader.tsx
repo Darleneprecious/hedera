@@ -21,7 +21,7 @@ const ProfileHeader = () => {
 
   if (!user) return null;
 
-  const initial = user?.username?.charAt(0)?.toUpperCase() || "?";
+  const initial = user?.name?.charAt(0)?.toUpperCase() || "?";
 
   return (
     <>

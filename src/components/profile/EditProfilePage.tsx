@@ -8,6 +8,8 @@ const EditProfilePage = () => {
   const navigate = useNavigate();
   const { user, updateUser } = useAuthContext();
 
+  const { name } = user;
+
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -35,7 +37,7 @@ const EditProfilePage = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     updateUser(formData);
-    navigate(-1); // navigate back to the profile page
+    navigate(-1);
   };
 
   return (
@@ -46,7 +48,7 @@ const EditProfilePage = () => {
       transition={{ type: "spring", stiffness: 80, damping: 18 }}
       className="min-h-screen bg-green-50 dark:bg-gray-900 p-5"
     >
-      {/* 🔙 Header */}
+      {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={() => navigate(-1)}
@@ -59,7 +61,7 @@ const EditProfilePage = () => {
         </h2>
       </div>
 
-      {/* 🧾 Profile Image */}
+      {/* Profile Image */}
       <div className="flex flex-col items-center gap-3 mb-8">
         {formData.profilePic ? (
           <img
@@ -69,7 +71,7 @@ const EditProfilePage = () => {
           />
         ) : (
           <div className="w-24 h-24 rounded-full bg-pri dark:bg-gray-700 flex items-center justify-center text-white text-3xl font-semibold">
-            {user?.name?.charAt(0)?.toUpperCase() || "?"}
+            {name ? name.charAt(0).toUpperCase() : "?"}
           </div>
         )}
         <label className="cursor-pointer text-green-600 font-medium text-sm">
