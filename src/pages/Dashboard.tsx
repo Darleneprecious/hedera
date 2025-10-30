@@ -12,10 +12,25 @@ import Ride from "../assets/home-icons/a.svg";
 import Book from "../assets/home-icons/book.svg";
 import Task from "../assets/home-icons/task.svg";
 import { transactions } from "../transactions";
+import { useAuthContext } from "../context/AuthContext";
 
 import TransactionsPreview from "../components/transactions/TransactionsPreview";
 
 const Dashboard = () => {
+  const { user } = useAuthContext();
+
+  if (!user) {
+    return (
+      <div className="h-screen flex items-center justify-center text-gray-700 ">
+        Loading user data...
+      </div>
+    );
+  }
+
+  const { name, profilePic, username } = user;
+
+  const balance = `${user.walletBalance || "0.00"}`;
+
   const navigate = useNavigate();
   // UI STATES
   const [balanceVisible, setBalanceVisible] = useState(true);
@@ -46,20 +61,30 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 bg-white sm:p-6 lg:p-10 font-sans text-grey">
+    <div className="min-h-screen bg-linear-to-b from-green-50 to-white px-4 sm:p-6 lg:p-10 font-sans text-grey">
       {" "}
-      <div className="max-w-md mx-auto">
+      <div className=" max-w-md mx-auto">
         {" "}
         {/* Header */}{" "}
-        <div className="absolute top-0 left-0 h-20 w-full flex bg-linear-to-b p-4 from-pri/32 to-[#ffffff]/20 py-4 from items-center justify-between">
+        <div className=" h-20 flex py-4 items-center justify-between">
           {" "}
           <div className="flex items-center gap-3">
-            {" "}
-            <div className="w-10 h-10 rounded-full bg-green-400 shrink-0" />{" "}
+            {/* Avatar Section */}
+            {profilePic ? (
+              <img
+                src={profilePic}
+                alt="User avatar"
+                className="w-10 h-10 rounded-full object-cover border-2 border-green-500"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-pri/10 border border-pri flex items-center justify-center text-pri text-3xl font-semibold">
+                {name ? name.charAt(0).toUpperCase() : "U"}
+              </div>
+            )}
             <div>
               {" "}
-              <div className="font-bold text-black ">Ola Aina</div>{" "}
-              <div className="text-xs text-gray-500">@Ola_Aina</div>{" "}
+              <div className="font-bold text-black ">{name}</div>{" "}
+              <div className="text-xs text-gray-500">@{username}</div>{" "}
             </div>{" "}
           </div>
           {/* HEADER RIGHT ICONS */}
@@ -103,7 +128,7 @@ const Dashboard = () => {
           </div>
         </div>
         {/* Balance Card */}
-        <div className="rounded-2xl mt-18 overflow-hidden bg-linear-to-br from-pri/64 to-pri/100 p-5 shadow-lg mb-4">
+        <div className="rounded-2xl overflow-hidden bg-linear-to-br from-pri/64 to-pri p-5 shadow-lg mb-4">
           <div className="flex items-center gap-4 justify-center">
             <div className="text-[15px] font-medium text-white/90">
               Your Balance
@@ -174,7 +199,7 @@ const Dashboard = () => {
 
           <div className="my-3 text-center">
             <div className="text-5xl font-bold text-white">
-              {balanceVisible ? "100.00" : "•••••"}
+              {balanceVisible ? `${balance}` : "•••••"}
             </div>
             <div className="text-sm flex items-center gap-2 justify-center font-bold text-white/90 mt-1">
               <span>
